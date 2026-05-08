@@ -133,13 +133,13 @@
         note: '공동교육과정은 그룹L과 같은 과목으로, 어느 한쪽에서 선택하면 두 그룹에 함께 반영됩니다.',
         subjects: [
           '경제 수학','인공지능 수학','언어생활 탐구','실생활 영어회화','국제 관계의 이해','기후변화와 환경생태','조형','운동과 건강',
-          '창의 공학 설계','언어생활과 한자','중국어 회화','일본 문화','데이터 과학'
+          '창의 공학 설계','생활과 한문','중국어 회화','일본 문화','데이터 과학'
         ].map(n => sub(n)).concat([sub(ONLINE_COURSE, '')]) },
       { grade: 3, id: 'L', title: '그룹L 개인 선택 과목Ⅱ', choose: 1, credit: 3,
         note: '공동교육과정은 그룹K와 같은 과목으로, 어느 한쪽에서 선택하면 두 그룹에 함께 반영됩니다.',
         subjects: [
           '경제 수학','인공지능 수학','실생활 영어회화','국제 관계의 이해','시각 디자인','운동과 건강','생활과학 탐구',
-          '한문 고전 읽기','심화 중국어','심화 일본어','소프트웨어와 생활'
+          '한문고전과 글쓰기','심화 중국어','심화 일본어','소프트웨어와 생활'
         ].map(n => sub(n)).concat([sub(ONLINE_COURSE, '')]) },
       { grade: 3, id: 'M', title: '그룹M 예술', choose: 2, credit: 2,
         note: '음악 계열은 「음악과 미디어」와 「음악 연주와 창작」을 함께 이수하고, 미술 계열은 「미술 창작」과 「미술 감상과 비평」을 함께 이수합니다.',
@@ -149,6 +149,33 @@
       { grade: 3, id: 'O', title: '그룹O 기술·가정/정보/교양 Ⅱ', choose: 1, credit: 3,
         subjects: ['생활과학 탐구','한문고전과 글쓰기','심화 중국어','심화 일본어','소프트웨어와 생활'].map(n => sub(n)) },
     ];
+
+    const GROUP_TERM_LABEL = {
+      A: '2학년 1학기',
+      C: '2학년 1학기',
+      E: '2학년 1학기',
+      B: '2학년 2학기',
+      D: '2학년 2학기',
+      F: '2학년 2학기',
+      H: '3학년 1학기',
+      K: '3학년 1학기',
+      N: '3학년 1학기',
+      I: '3학년 2학기',
+      J: '3학년 2학기',
+      L: '3학년 2학기',
+      O: '3학년 2학기',
+      M: '3학년 1,2학기'
+    };
+
+    function GroupMetaBadges({ group, currentCount }) {
+      return <div className="flex flex-wrap gap-2 mt-2">
+        <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700 border border-blue-100">{GROUP_TERM_LABEL[group.id] || `${group.grade}학년`}</span>
+        <span className="inline-flex items-center rounded-full bg-slate-50 px-2.5 py-1 text-xs font-bold text-slate-600 border border-slate-200">{group.choose}개 선택</span>
+        <span className="inline-flex items-center rounded-full bg-slate-50 px-2.5 py-1 text-xs font-bold text-slate-600 border border-slate-200">과목당 {group.credit}학점</span>
+        {typeof currentCount === 'number' && <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 border border-emerald-100">현재 {currentCount}/{group.choose}</span>}
+      </div>;
+    }
+
 
     const hierarchy = {
       '미적분Ⅱ': ['미적분Ⅰ'],
@@ -162,12 +189,6 @@
       '화학 반응의 세계': ['물질과 에너지'],
       '생물의 유전': ['세포와 물질대사'],
       '행성우주과학': ['지구시스템과학'],
-    };
-
-    const presets = {
-      science: { C: ['물리학','화학','생명과학'], D: ['역학과 에너지','물질과 에너지','세포와 물질대사'], E: ['기하'], F: ['인공지능 기초'], H: ['미적분Ⅱ','전자기와 양자','화학 반응의 세계'], I: ['실용 통계','전문 수학'], J: ['융합과학탐구','과학의 역사와 문화','기후변화와 환경생태','사회 문제 탐구'], K: ['인공지능 수학'], L: ['소프트웨어와 생활'], N: ['데이터 과학'], O: ['소프트웨어와 생활'], M: ['음악과 미디어','음악 연주와 창작'] },
-      humanities: { C: ['현대 사회와 윤리','세계시민과 지리','사회와 문화'], D: ['윤리와 사상','한국지리 탐구','정치'], E: ['문학과 영상'], F: ['주제 탐구 독서'], H: ['인문학과 윤리','경제','법과 사회'], I: ['독서 토론과 글쓰기','심화 영어 독해와 작문'], J: ['도시의 미래 탐구','사회 문제 탐구','금융과 경제생활','윤리문제 탐구'], K: ['국제 관계의 이해'], L: ['실생활 영어회화'], N: ['생활과 한문'], O: ['한문고전과 글쓰기'], M: ['미술 창작','미술 감상과 비평'] },
-      arts: { C: ['사회와 문화','세계사','생명과학'], D: ['동아시아 역사기행','윤리와 사상','세포와 물질대사'], E: ['미술과 매체'], F: ['디자인 일반'], H: ['과학의 역사와 문화','여행지리','역사로 탐구하는 현대세계'], I: ['독서 토론과 글쓰기','심화 영어 독해와 작문'], J: ['기후변화와 지속가능한 세계','사회 문제 탐구','도시의 미래 탐구','과학의 역사와 문화'], K: ['조형'], L: ['시각 디자인'], N: ['창의 공학 설계'], O: ['생활과학 탐구'], M: ['미술 창작','미술 감상과 비평'] }
     };
 
     function ProgressCard({ label, value, max, danger }) {
@@ -187,11 +208,11 @@
 
     function App() {
       const [activeGrade, setActiveGrade] = useState(1);
-      const [selected, setSelected] = useState(() => { try { return JSON.parse(localStorage.getItem('mm-credit-selected-v1-4')) || {}; } catch { return {}; } });
+      const [selected, setSelected] = useState(() => { try { return JSON.parse(localStorage.getItem('mm-credit-selected-v1-9')) || {}; } catch { return {}; } });
       const [query, setQuery] = useState('');
       const [toast, setToast] = useState('');
 
-      useEffect(() => { localStorage.setItem('mm-credit-selected-v1-4', JSON.stringify(selected)); }, [selected]);
+      useEffect(() => { localStorage.setItem('mm-credit-selected-v1-9', JSON.stringify(selected)); }, [selected]);
       useEffect(() => { if (toast) { const t = setTimeout(() => setToast(''), 2800); return () => clearTimeout(t); } }, [toast]);
 
       const selectedSubjects = useMemo(() => {
@@ -280,17 +301,6 @@
           return next;
         });
       }, [fixedSubjects]);
-
-      const applyPreset = (type) => {
-        const next = {};
-        Object.entries(presets[type]).forEach(([groupId, values]) => {
-          const group = groups.find(g => g.id === groupId);
-          if (!group) return;
-          next[groupId] = values.filter(v => group.subjects.some(s => s.name === v)).slice(0, group.choose);
-        });
-        setSelected(next);
-        setToast('진로 프리셋을 적용했습니다. 필요에 따라 과목을 조정하세요.');
-      };
       const handleSearch = () => {
         const term = query.trim().toLowerCase();
         if (!term) {
@@ -344,7 +354,7 @@
           groups.filter(g => g.grade === grade).forEach(group => {
             (selected[group.id] || []).forEach(name => {
               const subject = group.subjects.find(s => s.name === name);
-              rows.push({ grade, category: `${group.id}그룹`, name, area: subject?.area || '', credit: group.credit, semester: '-' });
+              rows.push({ grade, category: `${group.id}그룹`, name, area: subject?.area || '', credit: group.credit, semester: GROUP_TERM_LABEL[group.id] || '-' });
             });
           });
         });
@@ -361,7 +371,7 @@
         <header className="bg-white border-b sticky top-0 z-30">
           <div className="max-w-7xl mx-auto px-4 py-5">
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-              <div><p className="text-sm text-blue-600 font-semibold">2026학년도 입학생용 v1.8</p><h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">명문고 고교학점제 학점 계산기</h1></div>
+              <div><p className="text-sm text-blue-600 font-semibold">2026학년도 입학생용 v1.9</p><h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">명문고 고교학점제 학점 계산기</h1></div>
               <div className="flex flex-col sm:flex-row gap-2">
                 <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }} placeholder="과목명 검색" className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-400 bg-slate-50" />
                 <button onClick={handleSearch} className="px-4 py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition">검색</button>
@@ -374,7 +384,6 @@
 
         <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
           <section className="grid md:grid-cols-3 gap-4"><ProgressCard label="전체 이수 학점" value={totals.totalCredit} max={REQUIREMENTS.total} /><ProgressCard label="교과 이수 학점" value={totals.subjectCredit} max={REQUIREMENTS.subject} /><ProgressCard label="국어·수학·영어 합산" value={totals.kme} max={REQUIREMENTS.kmeLimit} danger={totals.kme > REQUIREMENTS.kmeLimit} /></section>
-          <section className="bg-white rounded-xl shadow-md p-4"><div className="flex flex-wrap gap-2 mb-4"><button onClick={() => applyPreset('science')} className="px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 transition">이공계 진학 추천</button><button onClick={() => applyPreset('humanities')} className="px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 font-semibold hover:bg-indigo-200 transition">인문·사회계 진학 추천</button><button onClick={() => applyPreset('arts')} className="px-4 py-2 rounded-full bg-pink-100 text-pink-700 font-semibold hover:bg-pink-200 transition">예술·체육계 진학 추천</button></div><p className="text-sm text-slate-500">프리셋은 추천 조합 예시입니다. 실제 수강신청 전에는 학교 교육과정 담당 교사의 확인이 필요합니다.</p></section>
           <section className="flex flex-wrap gap-2 bg-white rounded-xl shadow-md p-2 w-fit">
             {[1,2,3].map(grade => <button key={grade} onClick={() => setActiveGrade(grade)} className={`px-5 py-3 rounded-lg font-bold transition ${activeGrade === grade ? 'bg-blue-500 text-white shadow' : 'text-slate-600 hover:bg-slate-100'}`}>{grade}학년</button>)}
             <button onClick={() => setActiveGrade('summary')} className={`px-5 py-3 rounded-lg font-bold transition ${activeGrade === 'summary' ? 'bg-emerald-500 text-white shadow' : 'text-emerald-700 hover:bg-emerald-50'}`}>최종 선택 확인</button>
@@ -409,7 +418,7 @@
 
             <div className="bg-white rounded-xl shadow-md p-5">
               <h3 className="text-xl font-extrabold mb-3">선택 그룹 완료 현황</h3>
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3">{selectedGroupSummary.map(group => <div key={group.id} className={`rounded-xl border p-4 ${group.complete ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-300'}`}><div className="flex justify-between gap-3"><p className="font-extrabold">{group.id}그룹</p><span className={`text-sm font-bold ${group.complete ? 'text-green-700' : 'text-yellow-700'}`}>{group.selectedNames.length}/{group.choose}</span></div><p className="text-sm text-slate-500 mt-1">{group.title}</p><p className="mt-2 font-semibold">{group.selectedNames.length ? group.selectedNames.join(', ') : '미선택'}</p></div>)}</div>
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3">{selectedGroupSummary.map(group => <div key={group.id} className={`rounded-xl border p-4 ${group.complete ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-300'}`}><div className="flex justify-between gap-3"><p className="font-extrabold">{group.id}그룹</p><span className={`text-sm font-bold ${group.complete ? 'text-green-700' : 'text-yellow-700'}`}>{group.selectedNames.length}/{group.choose}</span></div><p className="text-sm text-slate-500 mt-1">{group.title}</p><GroupMetaBadges group={group} currentCount={group.selectedNames.length} /><p className="mt-2 font-semibold">{group.selectedNames.length ? group.selectedNames.join(', ') : '미선택'}</p></div>)}</div>
             </div>
           </section>}
 
@@ -422,7 +431,7 @@
               const complete = current.length === group.choose;
               const groupMatched = normalizedQuery && group.subjects.some(s => s.name.toLowerCase().includes(normalizedQuery));
               return <article key={group.id} className={`rounded-xl shadow-md bg-white p-5 border-2 ${complete ? 'border-green-300 bg-green-50/40' : 'border-yellow-300'} ${groupMatched ? 'ring-4 ring-yellow-300' : ''}`}>
-                <div className="flex justify-between items-start gap-4 mb-3"><div><h2 className="font-extrabold text-lg">{group.title}</h2><p className="text-sm text-slate-500">{group.choose}개 선택 · 과목당 {group.credit}학점 · 현재 {current.length}/{group.choose}</p></div><span className={`px-3 py-1 rounded-full text-sm font-bold ${complete ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{complete ? '완료' : '선택 필요'}</span></div>
+                <div className="flex justify-between items-start gap-4 mb-3"><div><h2 className="font-extrabold text-lg">{group.title}</h2><GroupMetaBadges group={group} currentCount={current.length} /></div><span className={`px-3 py-1 rounded-full text-sm font-bold ${complete ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{complete ? '완료' : '선택 필요'}</span></div>
                 <p className="text-sm text-orange-500 mb-3">⚠️ 표시는 선후 이수 순서 확인이 필요한 계열성 과목입니다.</p>
                 {group.note && <p className="text-sm text-blue-700 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2 mb-3">{group.note}</p>}
                 <div className="flex flex-wrap gap-2">{group.subjects.map(subject => {
